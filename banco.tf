@@ -1,16 +1,16 @@
 resource "aws_db_instance" "sql_server" {
+  identifier = "rds-fastorderdb-tf"
   allocated_storage = 20             # Tamanho do disco (em GB)
   storage_type      = "gp2"          # Tipo de armazenamento
   engine            = "sqlserver-ex" # Edição do SQL Server
   engine_version    = "15.00"        # Versão do SQL Server
-  instance_class    = "db.t3.large" # Tipo de instância
-  #name                    = var.databaseName          # Nome do banco de dados
+  instance_class    = "db.t3.micro" # Tipo de instância  
   username            = var.user     # Nome do usuário master
   password            = var.password # Senha do usuário master
   publicly_accessible = true         # Acesso público ativado
   port                = 1433         # Porta padrão do SQL Server
   license_model = "license-included"
-  parameter_group_name = "default.sqlserver-ex"
+  #parameter_group_name = "default.sqlserver-ex"
 
   vpc_security_group_ids = [aws_security_group.sql_server_sg.id] # Associando grupo de segurança
   skip_final_snapshot    = true                                  # Não cria snapshot ao destruir
@@ -18,7 +18,12 @@ resource "aws_db_instance" "sql_server" {
   # Substituir pelo seu subnet group se necessário
   db_subnet_group_name = aws_db_subnet_group.sql_subnet_group.name
 
-  iam_database_authentication_enabled = true
+  iam_database_authentication_enabled = false
+
+  tags = {
+    Name = "fastorderdb-RDS"
+  }
+
 }
 
 resource "aws_security_group" "sql_server_sg" {

@@ -1,5 +1,5 @@
 variable "databaseName" {
-  default  = "fastOrderDb"
+  default  = "fastorderdb"
   type     = string
   nullable = false
 }
