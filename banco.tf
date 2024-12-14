@@ -10,12 +10,15 @@ resource "aws_db_instance" "sql_server" {
   publicly_accessible = true         # Acesso público ativado
   port                = 1433         # Porta padrão do SQL Server
   license_model = "license-included"
+  parameter_group_name = "default.sqlserver-ex"
 
   vpc_security_group_ids = [aws_security_group.sql_server_sg.id] # Associando grupo de segurança
   skip_final_snapshot    = true                                  # Não cria snapshot ao destruir
 
   # Substituir pelo seu subnet group se necessário
   db_subnet_group_name = aws_db_subnet_group.sql_subnet_group.name
+
+  iam_database_authentication_enabled = true
 }
 
 resource "aws_security_group" "sql_server_sg" {
@@ -44,10 +47,10 @@ resource "aws_db_subnet_group" "sql_subnet_group" {
   subnet_ids = [for subnet in data.aws_subnet.subnet : subnet.id if subnet.availability_zone != "${var.region}e"]
 }
 
-resource "aws_iam_role_policy_attachment" "rds_directory_services" {
-  role       = data.aws_iam_role.labrole.id
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSDirectoryServiceAccess"
-}
+# resource "aws_iam_role_policy_attachment" "rds_directory_services" {
+#   role       = data.aws_iam_role.labrole.id
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSDirectoryServiceAccess"
+# }
 
 output "rds_endpoint" {
   value = aws_db_instance.sql_server.endpoint
