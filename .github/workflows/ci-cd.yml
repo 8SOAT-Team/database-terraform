@@ -45,15 +45,11 @@ jobs:
         echo "Verificando as credenciais AWS..."
         aws sts get-caller-identity
         
-    - name: Change directory to terraform
-      run: cd terraform
-
     - name: Terraform Init
       run: terraform init
-      #working-directory: terraform
-
+    
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
-      #working-directory: terraform
+     
       
