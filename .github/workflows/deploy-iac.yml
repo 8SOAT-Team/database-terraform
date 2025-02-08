@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - database
+          
       action:
         description: "Escolha a ação (apply ou destroy)"
         required: true
